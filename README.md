@@ -8,12 +8,9 @@ __stm32f4 library for flysky RC IBUS protocol using hardware UART__
 * RC transmitter : [FS-i6](https://www.flysky-cn.com/fsi6)
 * RC receiver : [FS-A8S](https://www.getfpv.com/flysky-fs-a8s-fs-a8s-2-4g-8ch-mini-receiver-with-ppm-i-bus-sbus-output.html) (No more production)
 
-https://www.arduino.cc/reference/en/libraries/ibusbm/
 
-Data is transmitted at 115200bps and a new value can be read every 7ms.  
-It will return a value between 1000 and 2000 if there is any data  
-it will return 0, if the transmitter (the remote control) is off.  
-Flysky iBUS uses a half-duplex asynchronous protocol format at 115200 baud.
+
+
 
 ## 1. Feature
 
@@ -42,3 +39,16 @@ Flysky iBUS uses a half-duplex asynchronous protocol format at 115200 baud.
     NVIC Settings
         USART1 global interrupt   : Enabled
 ``` 
+
+## 3. flysky ibus protocol
+
+Data is transmitted at 115200bps and a new value can be read every 7ms.  
+It will return a value between 1000 and 2000 if there is any data  
+it will return 0, if the transmitter (the remote control) is off.  
+Flysky iBUS uses a half-duplex asynchronous protocol format at 115200 baud.
+
+
+## 4. Reference
+https://github.com/bmellink/IBusBM  
+https://www.arduino.cc/reference/en/libraries/ibusbm/  
+https://youtu.be/ylp-ZKjsPiE
