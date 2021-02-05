@@ -47,11 +47,9 @@
 
 /* USER CODE BEGIN PV */
 
-uint8_t rx_buffer[32] = {0};
-uint16_t ibus[16] = {0};
-uint16_t checksum = 0;
 
-channel_t mychannel;
+
+
 
 /* USER CODE END PV */
 
@@ -63,30 +61,13 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
-	if(huart->Instance == USART1)
+	if(huart->Instance == IBUS_UART_INSTANCE)
 	{
-		for(int i = 0; i < 16; i++)
-		{
-			ibus[i] = (uint16_t)(rx_buffer[i * 2 + 1] << 8 | rx_buffer[i * 2]);
-		}
-
-		checksum = 0xffff;
-
-		for(int j = 0; j < 30; j++)
-		{
-			checksum -= rx_buffer[j];
-		}
-
-		if(checksum == ibus[15])
-			HAL_UART_Receive_IT(&huart1, rx_buffer, 32);
+		IBUS_READ_CHANNEL();
 	}
-
 }
-
 
 /* USER CODE END 0 */
 
@@ -121,9 +102,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Receive_IT(&huart1, rx_buffer, 32);
-
-
+  IBUS_INIT();
 
 
   /* USER CODE END 2 */

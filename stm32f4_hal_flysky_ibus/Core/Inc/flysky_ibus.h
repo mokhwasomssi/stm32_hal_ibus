@@ -9,18 +9,17 @@
 #define _FLYSKY_IBUS_H_
 
 #include "stm32f4xx_hal.h"
+#include "usart.h"
 
-typedef struct _channel
-{
-    uint16_t channel_1;
-    uint16_t channel_2;
-    uint16_t channel_3;
-    uint16_t channel_4;
-    uint16_t channel_5;
-    uint16_t channel_6;
+#define IBUS_UART			(&huart1)
+#define IBUS_UART_INSTANCE	(USART1)
 
-} channel_t;
+#define IBUS_LENGTH			0x20	// 32 bytes
+#define IBUS_COMMAND40		0x40	// Command to set servo or motor speed is always 0x40
+#define IBUS_CHANNLES		14
 
-void read_channel(channel_t* channel, uint16_t* rawdata);
+void IBUS_INIT();
+void IBUS_READ_CHANNEL();
+
 
 #endif /* INC_FLYSKY_IBUS_H_ */
