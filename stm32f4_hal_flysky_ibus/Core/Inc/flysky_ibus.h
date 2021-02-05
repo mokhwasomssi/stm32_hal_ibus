@@ -1,6 +1,8 @@
 /*
  * flysky_ibus.h
  *
+ * This library was written by referring to "https://github.com/bmellink/IBusBM"
+ *
  *  Created on: Feb 4, 2021
  *      Author: mokhwasomssi
  */
@@ -11,15 +13,18 @@
 #include "stm32f4xx_hal.h"
 #include "usart.h"
 
-#define IBUS_UART			(&huart1)
-#define IBUS_UART_INSTANCE	(USART1)
+/* User configuration */
+#define IBUS_UART				(&huart1)
+#define IBUS_UART_INSTANCE		(USART1)
+#define IBUS_USER_CHANNELS		6			// Use 6 channels
+/* User configuration */
 
-#define IBUS_LENGTH			0x20	// 32 bytes
-#define IBUS_COMMAND40		0x40	// Command to set servo or motor speed is always 0x40
-#define IBUS_CHANNLES		14
+#define IBUS_LENGTH				0x20	// 32 bytes
+#define IBUS_COMMAND40			0x40	// Command to set servo or motor speed is always 0x40
+#define IBUS_MAX_CHANNLES		14
 
 void IBUS_INIT();
-void IBUS_READ_CHANNEL();
+void IBUS_READ_CHANNEL(uint8_t user_channels);
 
 
-#endif /* INC_FLYSKY_IBUS_H_ */
+#endif /* _FLYSKY_IBUS_H_ */

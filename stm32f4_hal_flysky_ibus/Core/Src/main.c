@@ -65,7 +65,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == IBUS_UART_INSTANCE)
 	{
-		IBUS_READ_CHANNEL();
+		IBUS_READ_CHANNEL(IBUS_USER_CHANNELS);
 	}
 }
 
