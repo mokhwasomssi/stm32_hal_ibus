@@ -1,6 +1,6 @@
 # stm32f4_hal_flysky_ibus
 
-**Receive each channel data of FLYSKY RC transmitter/receiver**  
+**Receive each channel data from FLYSKY RC receiver which is using ibus protocol**  
 
 ## 0. Development environment  
 * IDE : [STM32Cubeide (STM32Cube HAL)](https://www.st.com/en/development-tools/stm32cubeide)
@@ -87,13 +87,54 @@ int main(void)
 
 ## 3. flysky ibus protocol
 
-Data is transmitted at 115200bps and a new value can be read every 7ms.  
-It will return a value between 1000 and 2000 if there is any data  
-it will return 0, if the transmitter (the remote control) is off.  
-Flysky iBUS uses a half-duplex asynchronous protocol format at 115200 baud.
+![image](https://user-images.githubusercontent.com/48342925/107107872-41d7f100-6877-11eb-931f-af72b5685ef4.png)
 
+* The ibus protocol is one of RX protocols developed by Flysky
+* half-duplex
+* Control multiple servos and motors using a single digital line.
+* New value can be read every 7ms
+* The values received for each channel are between 1000 and 2000
+* The ibus library requires a dedicated hardware serial (UART) port on microcontroller 
+    * UART RX required
+    * 115200 baud
+    * 8N1
+
+* Data frame
+```
+ // modified the contents in https://github.com/bmellink/IBusBM/blob/master/src/IBusBM.cpp
+
+ supports max 14 channels in this lib 
+ (with messagelength of 0x20 there is room for 14 channels)
+
+  Example set of 32 bytes coming over the iBUS line for setting servos: 
+    20 40 DB 5 DC 5 54 5 DC 5 E8 3 D0 7 D2 5 E8 3 DC 5 DC 5 DC 5 DC 5 DC 5 DC 5 DA F3
+  
+  Explanation
+    Protocol length: 20
+    Command code: 40 
+    Channel 0: DB 5  -> value 0x5DB
+    Channel 1: DC 5  -> value 0x5Dc
+    Channel 2: 54 5  -> value 0x554
+    Channel 3: DC 5  -> value 0x5DC
+    Channel 4: E8 3  -> value 0x3E8
+    Channel 5: D0 7  -> value 0x7D0
+    Channel 6: D2 5  -> value 0x5D2
+    Channel 7: E8 3  -> value 0x3E8
+    Channel 8: DC 5  -> value 0x5DC
+    Channel 9: DC 5  -> value 0x5DC
+    Channel 10: DC 5 -> value 0x5DC
+    Channel 11: DC 5 -> value 0x5DC
+    Channel 12: DC 5 -> value 0x5DC
+    Channel 13: DC 5 -> value 0x5DC
+    Checksum: DA F3 -> value 0xF3DA
+    
+    Checksum value = 0xFFFF - (sum of previous 30 bytes)
+ ```
 
 ## 4. Reference
 https://github.com/bmellink/IBusBM  
 https://www.arduino.cc/reference/en/libraries/ibusbm/  
-https://youtu.be/ylp-ZKjsPiE
+https://youtu.be/ylp-ZKjsPiE  
+https://medium.com/@werneckpaiva/how-to-read-rc-signal-with-arduino-using-flysky-ibus-73448bc924eb
+https://oscarliang.com/pwm-ppm-sbus-dsm2-dsmx-sumd-difference/  
+http://blog.dsp.id.au/posts/2017/10/22/flysky-ibus-protocol/
