@@ -1,2 +1,0 @@
-flysky_ibus.c:16:6:IBUS_INIT	8	static
-flysky_ibus.c:21:6:IBUS_READ_CHANNEL	56	static
