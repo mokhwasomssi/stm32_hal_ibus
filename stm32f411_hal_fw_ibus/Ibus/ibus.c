@@ -1,7 +1,5 @@
 /*
- * flysky_ibus.c
- *
- * This library was written by referring to "https://github.com/bmellink/IBusBM"
+ * flysky_ibus.h
  *
  *  Created on: Feb 4, 2021
  *      Author: mokhwasomssi
@@ -41,7 +39,6 @@ bool ibus_is_valid()
 	return (uart_rx_buffer[0] == IBUS_LENGTH && uart_rx_buffer[1] == IBUS_COMMAND40);
 }
 
-
 bool ibus_checksum()
 {
  	uint16_t checksum_cal = 0xffff;
@@ -56,7 +53,6 @@ bool ibus_checksum()
 	
 	return (checksum_ibus == checksum_cal);
 }
-
 
 void ibus_little_endian(uint16_t* ibus_data)
 {

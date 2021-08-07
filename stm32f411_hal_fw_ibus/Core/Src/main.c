@@ -48,15 +48,11 @@
 /* USER CODE BEGIN PV */
 uint16_t ibus_data[IBUS_USER_CHANNELS];
 
-uint8_t ibus_status;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /* USER CODE END PFP */
 
@@ -159,16 +155,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-/*
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart->Instance == IBUS_UART_INSTANCE)
-	{
-		ibus_read_channel(ibus_data);
-	}
-}
-*/
 
 /* USER CODE END 4 */
 
