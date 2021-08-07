@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -47,13 +48,15 @@
 /* USER CODE BEGIN PV */
 uint16_t ibus_data[IBUS_USER_CHANNELS];
 
+uint8_t ibus_status;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /* USER CODE END PFP */
 
@@ -90,6 +93,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
@@ -105,6 +109,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
+	  ibus_read_channel(ibus_data);
+	  HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }
@@ -154,6 +160,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+/*
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == IBUS_UART_INSTANCE)
@@ -161,6 +168,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		ibus_read_channel(ibus_data);
 	}
 }
+*/
 
 /* USER CODE END 4 */
 
