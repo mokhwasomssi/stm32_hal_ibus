@@ -89,7 +89,7 @@
                                     									
                                     <listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
                                     									
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f411_hal_fw_ibus/Ibus}&quot;"/>
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f411_fw_ibus/Ibus}&quot;"/>
                                     								
                                 </option>
                                 								
