@@ -46,6 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
 uint16_t ibus_data[IBUS_USER_CHANNELS];
 
 /* USER CODE END PV */
@@ -53,6 +54,8 @@ uint16_t ibus_data[IBUS_USER_CHANNELS];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /* USER CODE END PFP */
 
@@ -105,7 +108,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  ibus_read_channel(ibus_data);
+	  ibus_read(ibus_data);
+	  ibus_soft_failsafe(ibus_data, 10);
 	  HAL_Delay(10);
   }
   /* USER CODE END 3 */
@@ -155,6 +159,12 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart == IBUS_UART)
+		ibus_reset_failsafe();
+}
 
 /* USER CODE END 4 */
 

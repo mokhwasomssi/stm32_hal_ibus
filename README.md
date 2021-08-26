@@ -3,23 +3,25 @@
 ## Brief
 
 __ibus is a Flysky RC receiver protocol__  
-___TAG - `ibus`, `FLYSKY`, `UART`, `STM32 HAL`___
 
-## Library Features
-- Receive data using DMA mode
-- Check data is valid
-- Parsing raw data
+___KEYWORD - `i-bus`, `FLYSKY`, `UART`, `STM32 HAL` `DMA`___
+
+## Library Feature
+- Receive stick data using DMA mode
+    - 1000 - 2000
+- Software fail-safe
 
 ## Dev environment  
 - STM32CubeIDE
 - STM32 HAL driver
-- STM32F411CEU6
+- STM32F411
 - FLYSKY Transmitter & Receiver
-    - FS-i6, FS-A8S
+    - FS-i6, FS-A8S (fail-safe X)
 
 ## FLYSKY ibus protocol
 
-![image](https://user-images.githubusercontent.com/48342925/107107872-41d7f100-6877-11eb-931f-af72b5685ef4.png)  
+<img src = https://user-images.githubusercontent.com/48342925/107107872-41d7f100-6877-11eb-931f-af72b5685ef4.png width = "80%">
+
 * The ibus protocol is one of RX protocols developed by Flysky
 * half-duplex
 * Control multiple servos and motors using a single digital line.
@@ -30,7 +32,6 @@ ___TAG - `ibus`, `FLYSKY`, `UART`, `STM32 HAL`___
     * UART RX required
     * 115200 baud
     * 8N1
-
 * Data frame  
     - 32 bytes
     - Structure
@@ -39,11 +40,9 @@ ___TAG - `ibus`, `FLYSKY`, `UART`, `STM32 HAL`___
             20 40 DB 5 DC 5 54 5 DC 5 E8 3 D0 7 D2 5 E8 3 DC 5 DC 5 DC 5 DC 5 DC 5 DC 5 DA F3
             ```
         - Section  
-
             |Protocol length|Command code|CH1|CH2|CH3|...|CH14|Checksum|
             |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
             |0x20|0x40|0xDB 0x05|0xDC 0x05|0x54 0x05|...|0xDC 0x05|0xDA 0xF3|
-
     - Little Endian
         |ibus data|HEX|DEC|
         |:---:|:---:|:---:|
@@ -53,5 +52,52 @@ ___TAG - `ibus`, `FLYSKY`, `UART`, `STM32 HAL`___
         |...|...|...|
         |CH14|0x05DC|1500|
         |Checksum|0xF3DA||
-    - Checksum  
+    - Checksum calculation
         - 0xFFFF - (sum of previous 30 bytes)
+
+## STM32CubeMX
+- UART
+    ![image](https://user-images.githubusercontent.com/48342925/130916371-fba0d780-b273-4dc6-9996-b28158063f83.png)
+- DMA
+    ![image](https://user-images.githubusercontent.com/48342925/130916275-8f7e6641-5b73-459f-9c8c-d6e7b83db4c5.png)
+
+## Example
+
+### ibus.h
+- UART1, 6 Channels
+```c
+/* User configuration */
+#define IBUS_UART				(&huart1)
+#define IBUS_USER_CHANNELS		6		// Use 6 channels
+```
+
+### main.c
+- Only contain ibus things
+
+```c
+#include "ibus.h"
+
+// variables to store ibus data
+uint16_t ibus_data[IBUS_USER_CHANNELS];
+
+// for software fail-safe
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+
+int main(void)
+{
+    ibus_init();
+
+    while(1)
+    {
+        ibus_read(ibus_data);
+	    ibus_soft_failsafe(ibus_data, 10); // if ibus is not updated, clear ibus data.
+	    HAL_Delay(10);
+    }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart == IBUS_UART)
+		ibus_reset_failsafe();
+}
+```
